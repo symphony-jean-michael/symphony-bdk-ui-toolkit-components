@@ -47,10 +47,29 @@ const Modal: React.FC<ModalProps> = ({
 }: ModalProps) => {
   const containerClasses = classNames(className, `${prefix}-backdrop`);
   const sizeClasses = classNames(prefix, `${prefix}--${size}`);
-  const handleContentClick = (ev: React.MouseEvent<HTMLElement>) => ev.stopPropagation();
+  // const handleContentClick = (ev: React.MouseEvent<HTMLElement>) => {
+  //   ev.stopPropagation();
+  //   if (onClose) {
+  //     console.log('FIX!!! close', onClose);
+  //     onClose();
+  //   }
+  // }
+
+  const handleContentClick = React.useCallback(
+    () => {
+      (ev: React.MouseEvent<HTMLElement>) => {
+        ev.stopPropagation();
+        if (onClose) {
+          console.log('FIX!!! close', onClose);
+          onClose();
+        }
+      }
+    },
+    [onClose]
+  );
 
   const domResult = (
-    <div {...rest} className={containerClasses} onClick={onClose}>
+    <div {...rest} className={classNames(containerClasses, { 'tk-d-none': !show })} onClick={onClose}>
       <div className={sizeClasses} onClick={handleContentClick}>
         {closeButton && (
           <button className={buildClass('close')} onClick={onClose} />
@@ -60,11 +79,9 @@ const Modal: React.FC<ModalProps> = ({
     </div>
   );
 
-  return show
-    ? parentNode
-      ? ReactDOM.createPortal(domResult, parentNode)
-      : domResult
-    : null;
+  return parentNode
+    ? ReactDOM.createPortal(domResult, parentNode)
+    : domResult;
 };
 
 export default Modal;
