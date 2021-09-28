@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import classNames from 'classnames';
@@ -11,6 +12,7 @@ type ModalProps = {
   parentNode?: Element;
   show?: boolean;
   onClose?: () => void;
+  id?: string,
 };
 
 type ModalContentProps = {
@@ -33,11 +35,19 @@ export const ModalHeader: React.FC<ModalContentProps> = ({
   ...rest
 }: ModalContentProps) => <div className={classNames(buildClass('header'), className)} {...rest}> {children}</div >;
 
-export const ModalBody: React.FC<ModalContentProps> = ({
-  className,
-  children,
-  ...rest
-}: ModalContentProps) => <div className={classNames(buildClass('body'), className)} {...rest}>{children}</div>;
+export const ModalBody: React.FC<
+  ModalContentProps &
+  React.RefAttributes<HTMLDivElement>
+> = React.forwardRef(
+  (
+    {
+      className,
+      children,
+      ...rest
+    }: ModalContentProps,
+    ref?
+  ) => (<div ref={ref} className={classNames(buildClass('body'), className)} {...rest}>{children}</div>));
+ModalBody.displayName = 'ModalBody';
 
 export const ModalFooter: React.FC<ModalContentProps> = ({
   className,
@@ -45,54 +55,61 @@ export const ModalFooter: React.FC<ModalContentProps> = ({
   ...rest
 }: ModalContentProps) => <div className={classNames(buildClass('footer'), className)} {...rest}> {children}</div >;
 
-const Modal: React.FC<ModalProps> = ({
-  size,
-  className,
-  children,
-  closeButton,
-  onClose,
-  parentNode,
-  show,
-  ...rest
-}: ModalProps) => {
-  const containerClasses = classNames(className, `${prefix}-backdrop`);
-  const sizeClasses = classNames(prefix, { [`${prefix}--${size}`]: size });
-  const handleContentClick = (event: React.MouseEvent<HTMLElement>) =>
-    event.stopPropagation();
-  const handleKeyUp = (event: React.KeyboardEvent<HTMLElement>) => {
-    if (onClose && event.key === Keys.ESC) {
+const Modal: React.FC<
+  ModalProps &
+  React.RefAttributes<HTMLDivElement>
+> = React.forwardRef(
+  (
+    {
+      size,
+      className,
+      children,
+      closeButton,
+      onClose,
+      parentNode,
+      show,
+      ...rest
+    }: ModalProps,
+    ref?
+  ) => {
+    const containerClasses = classNames(className, `${prefix}-backdrop`);
+    const sizeClasses = classNames(prefix, { [`${prefix}--${size}`]: size });
+    const handleContentClick = (event: React.MouseEvent<HTMLElement>) =>
       event.stopPropagation();
-      onClose();
-    }
-  };
+    const handleKeyUp = (event: React.KeyboardEvent<HTMLElement>) => {
+      if (onClose && event.key === Keys.ESC) {
+        event.stopPropagation();
+        onClose();
+      }
+    };
 
-  const domResult = (
-    <div
-      {...rest}
-      className={containerClasses}
-      onClick={onClose}
-      onKeyUp={handleKeyUp}
-      tabIndex={-1}
-    >
-      <div role="dialog" className={sizeClasses} onClick={handleContentClick}>
-        {closeButton && (
-          <button
-            type="button"
-            aria-label="close"
-            className={buildClass('close')}
-            onClick={onClose}
-          />
-        )}
-        {children}
+    const domResult = (
+      <div
+        {...rest}
+        className={containerClasses}
+        onClick={onClose}
+        onKeyUp={handleKeyUp}
+        tabIndex={-1}
+        ref={ref}
+      >
+        <div role="dialog" className={sizeClasses} onClick={handleContentClick} style={{ position: 'relative' }}>
+          {closeButton && (
+            <button
+              type="button"
+              aria-label="close"
+              className={buildClass('close')}
+              onClick={onClose}
+            />
+          )}
+          {children}
+        </div>
       </div>
-    </div>
-  );
+    );
 
-  return show
-    ? parentNode
-      ? ReactDOM.createPortal(domResult, parentNode)
-      : domResult
-    : null;
-};
-
+    return show
+      ? parentNode
+        ? ReactDOM.createPortal(domResult, parentNode)
+        : domResult
+      : null;
+  });
 export default Modal;
