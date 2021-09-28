@@ -400,6 +400,7 @@ export class Dropdown<T = LabelValue> extends React.Component<
           blurInputOnSelect={blurInputOnSelect}
           menuShouldScrollIntoView={menuShouldScrollIntoView}
           menuPortalTarget={menuPortalTarget}
+          menuShouldBlockScroll={!!menuPortalTarget}
         //menuPortalTarget={document.body}
         />
       </div>
