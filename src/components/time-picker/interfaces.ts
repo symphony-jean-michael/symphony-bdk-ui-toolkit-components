@@ -1,6 +1,7 @@
 import { HasTooltipProps } from '../tooltip/interfaces';
 import { HasValidationProps } from '../validation/interfaces';
 import { MenuPortalProps } from '../dropdown/interfaces';
+import { Time } from './utils';
 
 export type TimePickerValue = string;
 
@@ -11,6 +12,15 @@ interface DisabledExactTime {
 interface DisabledTimeRange {
   from: string;
   to: string;
+}
+
+export interface TimePickerOption {
+  label: string;
+  value: string;
+  data: {
+    index: number;
+    time: Time;
+  };
 }
 
 export type DisabledTime = DisabledExactTime | DisabledTimeRange;
@@ -30,6 +40,7 @@ export type TimePickerProps = {
   max?: string;
   /** Identifies the time picker. */
   name?: string;
+  onFocus?: (event) => any;
   /** If null, then it will use the time format. */
   placeholder?: string;
   /** The step interval in seconds to be used to define the suggested times (min: 600, max: 43200, default: 900).*/

@@ -1,10 +1,10 @@
-import { Dropdown, DropdownOption } from '../dropdown';
+import { Dropdown } from '../dropdown';
 import * as PropTypes from 'prop-types';
 import * as React from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { Keys } from '../common/keyUtils';
 import { ErrorMessages } from '../validation/interfaces';
-import { DisabledTime, TimePickerProps } from './interfaces';
+import { DisabledTime, TimePickerProps, TimePickerOption } from './interfaces';
 import {
   formatTimeISO,
   formatISOTimeToSeconds,
@@ -38,6 +38,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({
   max,
   name,
   onChange,
+  onFocus,
   onValidationChanged,
   placeholder,
   step,
@@ -72,13 +73,13 @@ export const TimePicker: React.FC<TimePickerProps> = ({
   useEffect(() => {
     let newSelectedOption = options.find(
       (option) =>
-        option.data.hours === hours &&
-        option.data.minutes === minutes &&
-        option.data.seconds === seconds
+        option?.data?.time?.hours === hours &&
+        option?.data?.time?.minutes === minutes &&
+        option?.data?.time?.seconds === seconds
     );
     if (
       !newSelectedOption ||
-      isTimeDisabled(newSelectedOption.data, disabledTimes)
+      isTimeDisabled(newSelectedOption?.data?.time, disabledTimes)
     ) {
       newSelectedOption = null;
     }
@@ -191,10 +192,8 @@ export const TimePicker: React.FC<TimePickerProps> = ({
       iconName="recent"
       id={id}
       isDisabled={disabled}
-      isOptionDisabled={(time) => isTimeDisabled(time, disabledTimes)}
-      isOptionSelected={(time) =>
-        isTimeSelected(time, hours, minutes, seconds, disabledTimes)
-      }
+      isOptionDisabled={(option) => isTimeDisabled(option?.time, disabledTimes)}
+      isOptionSelected={(option) => isTimeSelected(option?.time, hours, minutes, seconds, disabledTimes)}
       inputAlwaysDisplayed={true}
       inputValue={inputValue}
       label={label}
@@ -214,7 +213,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({
         // Called when the user select an option in the Dropdown menu
         setSelectedOption(option);
       }}
-      onFocus={handleFocus}
+      onFocus={(event) => { console.log('OnFocus', event); onFocus ? onFocus(event) : null; handleFocus(event) }}
       onKeyDown={(event) =>
         handleKeyDown(
           event,
@@ -262,6 +261,7 @@ TimePicker.propTypes = {
   menuShouldBlockScroll: PropTypes.bool,
   name: PropTypes.string,
   onChange: PropTypes.func,
+  onFocus: PropTypes.func,
   onValidationChanged: PropTypes.func,
   placeholder: PropTypes.string,
   showRequired: PropTypes.bool,
@@ -289,7 +289,7 @@ const computeError = (
   max: string,
   disabledTimes: DisabledTime | Array<DisabledTime>,
   strict: boolean,
-  options: Array<DropdownOption<any>>
+  options: Array<TimePickerOption>
 ): ErrorMessages => {
   if (!value) {
     return null;
