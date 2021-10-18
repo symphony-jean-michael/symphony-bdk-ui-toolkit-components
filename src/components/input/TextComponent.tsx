@@ -33,9 +33,9 @@ type TextComponentProps = {
   /** Deprecated, please use rightDecorators instead */
   masked?: boolean;
   placeholder?: string;
-  onClick?: () => any;
-  onFocus?: () => any;
-  onKeyDown?: (event) => any;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
+  onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
   value?: string;
   showRequired?: boolean;
 } & HasTooltipProps &

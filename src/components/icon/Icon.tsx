@@ -13,14 +13,14 @@ export interface IconProps extends React.HTMLProps<HTMLElement> {
   tabIndex?: number;
   /** Callback when mouse click */
   onClick?: (event: React.MouseEvent<HTMLElement>) => void;
- /** deprecated; use onClick */
+  /** deprecated; use onClick */
   handleClick?: (
     event: React.MouseEvent<HTMLElement>
   ) => void;
   /** Keyboard Event */
-  onKeyDown?: (event) => any;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
   /** Keyboard Event */
-  onKeyPress?: (event) => any;
+  onKeyPress?: (event: React.KeyboardEvent<HTMLElement>) => void;
 }
 
 const Icon: React.FC<IconProps> = ({
@@ -60,7 +60,7 @@ Icon.propTypes = {
   tabIndex: PropTypes.number,
   onClick: PropTypes.func,
   onKeyDown: PropTypes.func,
-  onKeyPress:PropTypes.func,
+  onKeyPress: PropTypes.func,
   style: PropTypes.object,
 };
 

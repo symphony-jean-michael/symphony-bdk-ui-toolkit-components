@@ -184,6 +184,13 @@ export const TimePicker: React.FC<TimePickerProps> = ({
     placeholder = format ? format : getUserFormat();
   }
 
+  const onFocusWrapped = (event: React.FocusEvent<HTMLElement>) => {
+    if (onFocus) {
+      onFocus(event);
+    }
+    handleFocus(event)
+  };
+
   return (
     <Dropdown
       autoScrollToCurrent={true}
@@ -213,7 +220,7 @@ export const TimePicker: React.FC<TimePickerProps> = ({
         // Called when the user select an option in the Dropdown menu
         setSelectedOption(option);
       }}
-      onFocus={(event) => { console.log('OnFocus', event); onFocus ? onFocus(event) : null; handleFocus(event) }}
+      onFocus={onFocusWrapped}
       onKeyDown={(event) =>
         handleKeyDown(
           event,

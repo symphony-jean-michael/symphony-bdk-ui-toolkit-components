@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { CSSProperties } from 'react';
 import { MenuPlacement } from 'react-select';
 import Select from 'react-select';
@@ -139,15 +140,15 @@ export type DropdownProps<T> = {
   /** Handle blur events on the control */
   onBlur?: (e) => any;
   /** Handle key down events on the select */
-  onKeyDown?: (event) => any;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLElement>) => void;
   /** Handle key up events on the select */
-  onKeyUp?: (event) => any;
+  onKeyUp?: (event: React.KeyboardEvent<HTMLElement>) => void;
   /** Handle change events on the input */
   onInputChange?: (string, any) => any;
   /** Handle clear event */
   onClear?: () => any;
   /** Handle focus event */
-  onFocus?: (event) => any;
+  onFocus?: (event: React.FocusEvent<HTMLElement>) => void;
   /** Handle the menu opening */
   onMenuOpen?: () => void;
   /** Handle the menu closing */
