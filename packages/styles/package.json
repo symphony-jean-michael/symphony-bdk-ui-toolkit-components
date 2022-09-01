@@ -38,7 +38,7 @@
     "markdown-loader": "^6.0.0",
     "postcss": "^8.2.13",
     "postcss-cli": "^8.3.0",
-    "sass": "^1.26.11",
+    "sass": "^1.54.8",
     "sass-loader": "^10.0.2",
     "storybook-addon-themes": "^6.1.0",
     "storybook-dark-mode": "^1.0.8"
