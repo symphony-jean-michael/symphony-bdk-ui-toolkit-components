@@ -9,9 +9,18 @@
     "packages/*"
   ],
   "scripts": {
+    "clean": "echo '🧹 Cleaning...' && rimraf doc && yarn workspaces run clean && mkdir -p doc/packages",
+    "build-styles": "echo '💅 Building Styles ...' && yarn workspace @symphony-ui/uitoolkit-styles build",
+    "build-storybooks": "echo '🔧 Building Storybooks ...' && yarn workspaces run storybook build -c .storybook -o dist/storybook",
+    "copy-storybooks": "mv packages/components/dist/storybook doc/packages/components && mv packages/styles/dist/storybook doc/packages/styles",
+    "copy-doc-templates": "cp doc-templates/* ./doc",
+    "build-website": "yarn run clean && yarn run build-styles &&yarn run build-storybooks && yarn run copy-storybooks && copy-doc-templates",
     "dedupe": "npx yarn-deduplicate yarn.lock",
     "postinstall": "yarn workspace @symphony-ui/uitoolkit-styles build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "web" : "http-server ./doc",
+    "web-s" : "http-server ./doc/packages/styles",
+    "web-c" : "http-server ./doc/packages/components"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": "eslint --cache --fix",
@@ -19,7 +28,9 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "husky": "^8.0.3"
+    "http-server": "^14.1.1",
+    "husky": "^8.0.3",
+    "rimraf": "^6.0.1"
   },
   "packageManager": "yarn@1.22.11",
   "engines": {

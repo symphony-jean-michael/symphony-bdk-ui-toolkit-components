@@ -1,7 +1,7 @@
 import { dirname, join } from 'path';
 const path = require('path');
 module.exports = {
-  stories: ['../stories/**/*.stories.js'],
+  stories: ["../stories/index.stories.mdx",'../stories/**/*.stories.js'],
   addons: [
     getAbsolutePath('creevey'),
     getAbsolutePath('storybook-addon-themes'),
@@ -44,7 +44,7 @@ module.exports = {
     name: getAbsolutePath('@storybook/html-webpack5'),
     options: {},
   },
-
+  stories: ['../stories/**/*.stories.mdx', '../stories/**/*.stories.js'],
   docs: {
     autodocs: true,
   },
